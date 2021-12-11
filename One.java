@@ -13,10 +13,10 @@ public class One {
         List<Integer> cellsProcessed = new ArrayList<>();
         List<Integer> cellsProcessedRFA = new ArrayList<>();
         List<Boolean> solvabilty = new ArrayList<>();
-        for(int l=0;l<5;l++) {
+        for(int l=0;l<1;l++) {
             List<Integer> Maze = new ArrayList<>();
 
-            int dim = 10;
+            int dim = 3;
             int values[][] = new int[dim][dim];
             int dummyValues[][] = new int[dim][dim];
 
@@ -485,14 +485,19 @@ class Solution {
         //int ans=0;
         for (int i = 0; i < track.size(); i++) {
             Candidate canValue = track.get(i);
+            appendLocAgent(canValue.row, canValue.col);
+
             for (int[] neighbour : getNeighbours(canValue.row, canValue.col, newGrid)){
                 int neighbourRow = neighbour[0];
                 int neighbourCol = neighbour[1];
                 if(newGrid[neighbourRow][neighbourCol]!=grid[neighbourRow][neighbourCol]){
                     newGrid[neighbourRow][neighbourCol]=grid[neighbourRow][neighbourCol];
                     visited[neighbourRow][neighbourCol]=true;
+
                 }
             }
+            appendFile(newGrid);
+
             if (newGrid[canValue.row][canValue.col] != grid[canValue.row][canValue.col] || visited[canValue.row][canValue.col]==true) {
                 // newGrid[canValue.row][canValue.col] = grid[canValue.row][canValue.col];
 
@@ -510,12 +515,22 @@ class Solution {
 
         }
 //how to add this
+
+
+        // int ans = RFAstar(newGrid, 0, 0, 1);
+        return trajectoryLen;
+
+        // return -1;
+    }
+    //appending the file for data collection of agent moves
+    public void appendFile (int[][] newGrid){
+
         FileWriter locFile7=null;
         try {
             locFile7 = new FileWriter("DiscoveredGrid.txt", true);
 
-            for (int i = 0; i < 10; i++) {
-                for(int j=0 ;j< 10; j++) {
+            for (int i = 0; i < newGrid.length; i++) {
+                for(int j=0 ;j< newGrid[0].length; j++) {
                     locFile7.append(newGrid[i][j] + "\t");
 
                 }
@@ -528,9 +543,22 @@ class Solution {
             e.printStackTrace();
         }
 
-        // int ans = RFAstar(newGrid, 0, 0, 1);
-        return trajectoryLen;
-
-        // return -1;
     }
+
+    public void appendLocAgent (int i, int j) {
+
+        FileWriter locFile8 = null;
+        try {
+            locFile8 = new FileWriter("DiscoveredLocAgent.txt", true);
+            locFile8.append("("+i+","+j+")");
+            locFile8.append("\n");
+            locFile8.close();
+    } catch(IOException e) {
+            System.out.println("In catch block");
+            e.printStackTrace();
+        }
+
+    }
+
+
 }
